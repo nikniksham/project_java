@@ -19,15 +19,16 @@ public class GameView extends SurfaceView implements Runnable {
     volatile boolean playing;
     private Thread gameThread = null;
     private Player player;
-    private Friend friend;
 
     private Paint paint;
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
     private ArrayList<Star> stars = new ArrayList<Star>();
+    private ArrayList<Friend> friends = new ArrayList<Friend>();
 
     int screenX;
+    int screenY;
     int countMisses;
 
     boolean flag;
@@ -51,16 +52,14 @@ public class GameView extends SurfaceView implements Runnable {
         surfaceHolder = getHolder();
         paint = new Paint();
 
-        int starNums = 100;
+        int starNums = 350;
         for (int i = 0; i < starNums; i++) {
             Star s = new Star(screenX, screenY);
             stars.add(s);
         }
 
-        // добавляем новый объект - Friend
-        friend = new Friend(context, screenX, screenY);
-
         this.screenX = screenX;
+        this.screenY = screenY;
         countMisses = 0;
         isGameOver = false;
 
@@ -125,7 +124,9 @@ public class GameView extends SurfaceView implements Runnable {
                 paint.setStrokeWidth(s.getStarWidth());
                 canvas.drawPoint(s.getX(), s.getY(), paint);
             }
-
+            for (Friend f: friends) {
+                canvas.drawBitmap(f.getBitmap(), f.getX(), f.getY(), paint);
+            }
 
             paint.setTextSize(30);
             canvas.drawText("Очки: "+score,100,50,paint);
@@ -136,12 +137,6 @@ public class GameView extends SurfaceView implements Runnable {
                     player.getY(),
                     paint);
 
-            // отрисовка Friend
-            canvas.drawBitmap(
-                    friend.getBitmap(),
-                    friend.getX(),
-                    friend.getY(),
-                    paint);
 
             if(isGameOver){
                 paint.setTextSize(150);
@@ -167,10 +162,15 @@ public class GameView extends SurfaceView implements Runnable {
         player.update();
 
         // обновление у Friend
-        friend.update(player.getSpeed());
+        for (Friend f: friends) {f.update(player.getSpeed());}
 
-        for (Star s : stars) {
-            s.update(player.getSpeed());
+        for (Star s : stars) {s.update(player.getSpeed());}
+        int friendNum = score / 300;
+        if (friendNum > 10) {friendNum = 15;}
+        System.out.println(score);
+        for (int i = friends.size(); i < friendNum; i++) {
+            Friend f = new Friend(context, screenX, screenY);
+            friends.add(f);
         }
     }
 

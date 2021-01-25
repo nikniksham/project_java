@@ -35,10 +35,15 @@ public class Friend {
     }
 
     public void update(int playerSpeed) {
-        x -= playerSpeed;
-        Random gen = new Random();
-        y = gen.nextInt(maxY);
-
+        speed = 5;
+        if (playerSpeed > speed) {speed = playerSpeed;}
+        x -= speed;
+        System.out.println(playerSpeed);
+        if (x < -this.bitmap.getWidth()) {
+            x = maxX;
+            Random generator = new Random();
+            y = generator.nextInt(maxY);
+        }
     }
 
     public Bitmap getBitmap() {
