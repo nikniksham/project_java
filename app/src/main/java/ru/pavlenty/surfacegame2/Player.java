@@ -11,12 +11,12 @@ public class Player {
     private int y;
     private int speed = 0;
     private boolean boosting;
-    private final int GRAVITY = -10;
+    private int GRAVITY = -10;
     private int maxY;
     private int minY;
 
-    private final int MIN_SPEED = 1;
-    private final int MAX_SPEED = 20;
+    private int MIN_SPEED = 1;
+    private int MAX_SPEED = 20;
 
     private Rect detectCollision;
 
@@ -43,9 +43,11 @@ public class Player {
 
     public void update() {
         if (boosting) {
-            speed += 2;
+            y += GRAVITY;
+            speed += MAX_SPEED / 10;
         } else {
-            speed -= 5;
+            y -= GRAVITY;
+            speed -= MAX_SPEED / 4;
         }
 
         if (speed > MAX_SPEED) {
@@ -55,8 +57,6 @@ public class Player {
         if (speed < MIN_SPEED) {
             speed = MIN_SPEED;
         }
-
-        y -= speed + GRAVITY;
 
         if (y < minY) {
             y = minY;
@@ -73,6 +73,8 @@ public class Player {
 
     }
 
+    public void changeSpeed(int score) {MIN_SPEED = 5 + score / 250; MAX_SPEED = 20 + score / 50;
+        GRAVITY = (score / 100 + 10) * -1;}
 
     public Rect getDetectCollision() {
         return detectCollision;
