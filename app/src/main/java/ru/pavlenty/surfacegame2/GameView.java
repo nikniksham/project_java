@@ -166,7 +166,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
-        score++;
+        if (!isGameOver) {score++;}
         player.changeSpeed(score);
         player.update();
 
